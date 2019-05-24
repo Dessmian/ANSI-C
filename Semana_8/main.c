@@ -19,18 +19,18 @@ typedef struct
 int getCharacter (char*);
 void printChar(char* character);
 int getNum (int* pNum , int min ,int max , char* message , char* errMessage);
-sPerson getPerson ();
+int getPerson (sPerson* p_PersonList , int* lenght);
 void printOnePerson (sPerson* person);
 void printPersonList (sPerson* p_PersonList , int lenght );
 void initPersonList (sPerson* p_PersonList , int* lenght);
 int main()
 {
-    sPerson* p_PersonList ;
-    static int personListElements = 0;
-    p_PersonList = (sPerson*)malloc(sizeof(sPerson));
-    personListElements ++;
-    initPersonList(p_PersonList, &personListElements);
-    printPersonList(p_PersonList,personListElements);
+   // sPerson* p_PersonList ;
+   // static int personListElements = 0;
+  //  p_PersonList = (sPerson*)malloc(sizeof(sPerson));
+   // personListElements ++;
+  //  initPersonList(p_PersonList, &personListElements);
+  //  printPersonList(p_PersonList,personListElements);
     return 0;
 }
 void printChar (char* character)
@@ -68,6 +68,59 @@ int getNum (int* pNum , int min ,int max , char* message , char* errMessage)
     }
         return itsDone;
 }
+int getName (char* pName , char* message , char* errMessage)
+{
+    char auxName[51];
+    int itsDone = 0;
+    int i = 0;
+    printf("\n%s", message);
+    fflush(stdin);
+    gets(auxName);
+    while(isName(auxName,51)==0)
+    {
+        if (i > 5)
+        {
+            break;
+        }
+        printf("\n%s",errMessage );
+        fflush(stdin);
+        gets(auxName);
+        i++;
+    }
+    if (isName(auxName)==1)
+    {
+        pName = (char*)malloc(sizeof(char)*(strlen(auxName)));
+        if (pName != NULL)
+        {
+            strcpy(pName,auxName);
+            itsDone = 1;
+        }
+    }
+    return itsDone;
+}
+int isName (char* inputData , int lenght )
+{
+    int isValid = 0;
+    int i;
+    if (inputData != NULL)
+    {
+        for (i = 0; i < lenght; i++)
+        {
+            if ( isalpha(inputData[i])== 0 )
+            {
+                if (inputData[i] != ' ')
+                {
+                    if ( inputData[i] == '\0' && i > 2 )
+                    {
+                        isValid = 1;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return isValid;
+}
 int getPerson (sPerson* p_PersonList , int* lenght)
 {
     sPerson auxPerson;
@@ -78,11 +131,11 @@ int getPerson (sPerson* p_PersonList , int* lenght)
     fflush(stdin);
     scanf("%d" , &auxPerson.age );
     auxPerson.isEmpty=0;
-    return auxPerson;
+    return 0;
 }
 int getNewSpace (sPerson* p_PersonList , int lenght )
 {
-
+    return 0;
 }
 void printPersonList (sPerson* p_PersonList , int lenght )
 {
