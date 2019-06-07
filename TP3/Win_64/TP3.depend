@@ -94,3 +94,48 @@
 
 1559822731 d:\demian murray\semana10\tp3\win_64\parser.h
 
+1559915770 source:d:\demian murray\tp3\win_64\controller.c
+	<stdio.h>
+	<stdlib.h>
+	"LinkedList.h"
+	"Employee.h"
+	"parser.h"
+
+1559918922 d:\demian murray\tp3\win_64\linkedlist.h
+
+1559918922 d:\demian murray\tp3\win_64\employee.h
+
+1559914822 d:\demian murray\tp3\win_64\parser.h
+
+1559916126 source:d:\demian murray\tp3\win_64\employee.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	"Employee.h"
+	"LinkedList.h"
+	"validations.h"
+
+1559916153 source:d:\demian murray\tp3\win_64\main.c
+	<stdio.h>
+	<stdlib.h>
+	"LinkedList.h"
+	"Controller.h"
+	"Employee.h"
+
+1559918922 d:\demian murray\tp3\win_64\controller.h
+
+1559919466 source:d:\demian murray\tp3\win_64\parser.c
+	<stdio.h>
+	<stdlib.h>
+	"LinkedList.h"
+	"Employee.h"
+
+1559919800 source:d:\demian murray\tp3\win_64\validations.c
+	<stdio.h>
+	<stdlib.h>
+	<ctype.h>
+	<string.h>
+
+1559916089 d:\demian murray\tp3\win_64\validations.h
+

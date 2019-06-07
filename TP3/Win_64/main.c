@@ -22,10 +22,11 @@
 int main()
 {
 
-    int option = 0;
+    //int option = 0;
     LinkedList* listaEmpleados = ll_newLinkedList();
     controller_loadFromText("data.csv",listaEmpleados);
     controller_ListEmployee(listaEmpleados);
+    controller_saveAsText("dataSave.csv",listaEmpleados);
     ll_deleteLinkedList(listaEmpleados);
     /*do{
         switch(option)

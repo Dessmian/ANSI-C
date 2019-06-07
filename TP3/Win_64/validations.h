@@ -11,7 +11,7 @@
  * \return 1 si es valido - 0 si no es valido
  *
  */
-int isName (char* inputStr , int lenght)
+int isName (char* inputStr , int lenght);
 /** \brief verifica que sean solo digitos
  *
  * \param inputStr - el puntero a char a verificar
@@ -19,4 +19,4 @@ int isName (char* inputStr , int lenght)
  * \return 1 si es valido - 0 si no es valido
  *
  */
-int isInt (char* inputStr , int lenght)
+int isInt (char* inputStr , int lenght);

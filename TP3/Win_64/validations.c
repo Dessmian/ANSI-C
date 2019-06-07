@@ -15,8 +15,11 @@ int isName (char* inputStr , int lenght)
             {
                 if ((isspace(*(inputStr+i)))== 0 )
                 {
-                    error = 1;
-                    break;
+                    if (*(inputStr+i)!='-')
+                    {
+                        error = 1;
+                        break;
+                    }
                 }
             }
             if (i==0)

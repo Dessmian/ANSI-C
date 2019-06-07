@@ -15,17 +15,13 @@ int parser_EmployeeFromText(FILE* pFile , LinkedList* pArrayListEmployee)
     int retVal = 0;
     if (pFile!=NULL&&pArrayListEmployee!=NULL)
     {
-        char auxID [128] , auxNombre [128] , auxHoras [128] , auxSueldo [128];
-        fscanf(pFile,"%[^,],%[^,],%[^,],%[^\n]\n",auxID,auxNombre,auxHoras,auxSueldo);
+        char buffer [4][128];
+        fscanf(pFile,"%[^,],%[^,],%[^,],%[^\n]\n",buffer[0],buffer[1],buffer[2],buffer[3]);
         while (!feof(pFile))
         {
-            *auxID = '\0';
-            *auxNombre = '\0';
-            *auxHoras = '\0';
-            *auxSueldo = '\0';
             Employee* new_employee;
-            fscanf(pFile,"%[^,],%[^,],%[^,],%[^\n]\n",auxID,auxNombre,auxHoras,auxSueldo);
-            new_employee = employee_newParametros(auxID,auxNombre,auxHoras,auxSueldo);
+            fscanf(pFile,"%[^,],%[^,],%[^,],%[^\n]\n",buffer[0],buffer[1],buffer[2],buffer[3]);
+            new_employee = employee_newParametros(buffer[0],buffer[1],buffer[2],buffer[3]);
             if (new_employee!=NULL)
             {
                 ll_add(pArrayListEmployee,new_employee);
@@ -47,4 +43,38 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 {
 
     return 1;
+}
+int parser_EmployeeListToText (FILE* pFile, LinkedList* pArrayListEmployee)
+{
+    int retVal = 0;
+    if (pFile!=NULL&&pArrayListEmployee!=NULL)
+    {
+        int i , lenght , elementsWriten , error = 0;
+        Employee* auxEmp;
+        lenght = ll_len(pArrayListEmployee);
+        fprintf(pFile,"Identification;Nombre;Horas Trabajadas;Sueldo\n");
+        for (i=0;i<lenght;i++)
+        {
+            auxEmp = (Employee*)ll_get(pArrayListEmployee,i);
+            if (auxEmp==NULL)
+            {
+                error = 1;
+                break;
+            }
+            else
+            {
+                elementsWriten = fprintf(pFile,"%d;%s;%d;%d\n",auxEmp->id,auxEmp->nombre,auxEmp->horasTrabajadas,auxEmp->sueldo);
+                if (elementsWriten<4)
+                {
+                    error = 1;
+                    break;
+                }
+            }
+        }
+        if (i==lenght&&error==0)
+        {
+            retVal = 1;
+        }
+    }
+    return retVal;
 }

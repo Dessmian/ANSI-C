@@ -1,8 +1,11 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "Employee.h"
 #include "LinkedList.h"
+#include "validations.h"
+
 /* Los setter deben contener validaciones
     -pido memoria
     -cargo campos
@@ -96,7 +99,7 @@ int employee_setNombre(Employee* ptrEmp,char* nombre)
     {
         if (isName(nombre,strlen(nombre)))
         {
-            strcpy(&(ptrEmp->nombre),nombre);
+            strcpy(ptrEmp->nombre,nombre);
             retVal = 1;
         }
     }
