@@ -56,19 +56,19 @@ int parser_employeeListToText (FILE* pFile , LinkedList* pArrayListEmployee)
         lenght = ll_len(pArrayListEmployee);
         Employee* auxPtr;
         int datosEscritos;
-        fprintf(pFile,"ID;Nombre;Horas Trabajadas;Sueldo\n");
+        fprintf(pFile,"ID,Nombre,Horas Trabajadas,Sueldo\n");
         for (i=1;i<lenght;i++)
         {
             auxPtr = (Employee*) ll_get(pArrayListEmployee,i);
             if (auxPtr!=NULL)
             {
 
-                //datosEscritos = fprintf(pFile,"%d,%s,%d,%d\n",auxPtr->id,auxPtr->nombre,auxPtr->horasTrabajadas,auxPtr->sueldo);
+                datosEscritos = fprintf(pFile,"%d,%s,%d,%d\n",auxPtr->id,auxPtr->nombre,auxPtr->horasTrabajadas,auxPtr->sueldo);
                 //printf("%d\n",datosEscritos);
-                fwrite(&(auxPtr->id),1,sizeof(int),pFile );
+               /* fwrite(&(auxPtr->id),1,sizeof(int),pFile );
                 fwrite(&(auxPtr->nombre),strlen(auxPtr->nombre),sizeof(char),pFile );//itoa(auxPtr->id),itoa(auxPtr->nombre),itoa(auxPtr->horasTrabajadas),itoa(auxPtr->sueldo)
                 fwrite(&(auxPtr->horasTrabajadas),1,sizeof(int),pFile );
-                fwrite(&(auxPtr->sueldo),1,sizeof(int),pFile );
+                fwrite(&(auxPtr->sueldo),1,sizeof(int),pFile );*/
             }
         }
         /*if (datosEscritos>0)
