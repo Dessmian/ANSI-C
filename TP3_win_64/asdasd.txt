@@ -1,0 +1,44 @@
+    int retVal = 0;
+    if (retName!=NULL)
+    {
+        char* auxStr = NULL;
+        auxStr = (char*)malloc((sizeof(char)) * 128);
+        if (auxStr!=NULL)
+        {
+            int isValid, counter = 0;
+            printf("\nIngrese nombre: ");
+            fflush(stdin);
+            fgets(auxStr,127,stdin);
+            isValid = isName(auxStr,strlen(auxStr));
+            while (isValid==0 && counter<5)
+            {
+                printf("\nHubo un error, vuelva a intentar. Ingrese nombre: ");
+                fflush(stdin);
+                fgets(auxStr,127,stdin);
+                isValid = isName(auxStr,strlen(auxStr));
+                counter++;
+            }
+            if (isValid==1)
+            {
+               // if ( (sizeof(retName)) >= ( (strlen(auxStr)) * (sizeof(char)) ) )
+               // {
+                    strcpy(retName,auxStr);
+                    retVal = 1;
+               // }
+                //else
+               // {
+                //    char* auxPtr;
+                 //   auxPtr = (char*)realloc(retName, ( (sizeof(char)) * ((strlen(auxStr))+2) ) );
+                 //   if (auxPtr!=NULL && auxPtr!=retName)
+                 //   {
+                   //     retName = auxPtr;
+                   //     strcpy(retName,auxStr);
+                   //     retVal = 1;
+                  //  }
+                //}
+
+            }
+        }
+        free(auxStr);
+    }
+    return retVal;

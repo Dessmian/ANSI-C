@@ -74,12 +74,9 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
     int retVal = 0;
     if (pArrayListEmployee!=NULL)
     {
-        int idOK, nameOK, hoursOK, salaryOK;
-        int* auxID = (int*)malloc(sizeof(int));
-        int *
-        int auxHours = 0, auxSalary = 0;
-        char* auxName = (char*)malloc( (sizeof(char))*128 );
-        if (auxName!=NULL)
+        int idValid , idRepeat , nameOK, hoursOK, salaryOK;
+        Employee* bufferEmployee = (Employee*)malloc(sizeof(Employee));
+        if (bufferEmployee!=NULL)
         {
             switch(1)
             {
@@ -87,80 +84,73 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
             case 1:
                 system("cls");
                 printf("ALTA EMPLEADOS\n\n");
-                idOK = controller_askfor_ID(&auxID);
-                if (idOK==1)
+                idValid = controller_askfor_ID(bufferEmployee);
+                if (idValid)
                 {
                     int tries = 0;
                     int sugestion = employee_getNewID(pArrayListEmployee);
                     do
                     {
-                        idOK = controller_compare_ID(pArrayListEmployee,auxID);
-                        switch (idOK)
+                        int auxID;
+                        employee_getId(bufferEmployee,&auxID);
+                        idRepeat = controller_compare_ID(pArrayListEmployee,auxID);
+                        switch (idRepeat)
                         {
 
                         case 0:
-                            idOK = 1;
+                            idValid = 1;
                             break;
                         case 1:
 
                             if (sugestion != (-1) )
                             {
                                 printf("\nEl id ingresado ya esta en uso. ID sugerido: %d",sugestion);
-                                idOK = controller_askfor_ID(&auxID);
+                                idValid = controller_askfor_ID(bufferEmployee);
                             }
                             break;
                         }
-                    }while (idOK == 1 || tries > 4);
+                    }while (idRepeat && tries < 5);
                 }
                 else
                 {
-                    clearScreen();
-                    printf("Hubo un error al ingresar el ID. Datos invalidos ingresados.\nIntente mas tarde.\n");
-                    pause();
+                    print_error_invalidData("el ID");
                     break;
                 }
-                nameOK = controller_askfor_name(auxName);
+                nameOK = controller_askfor_name(bufferEmployee);
                 if (nameOK==0)
                 {
-                    clearScreen();
-                    printf("Hubo un error al ingresar el nombre. Datos invalidos ingresados.\nIntente mas tarde.\n");
-                    pause();
+                    print_error_invalidData("el nombre");
                     break;
                 }
-                hoursOK = controller_askfor_hours(&auxHours);
+                hoursOK = controller_askfor_hours(bufferEmployee);
                 if (hoursOK==0)
                 {
-                    clearScreen();
-                    printf("Hubo un error al ingresar las horas. Datos invalidos ingresados.\nIntente mas tarde.\n");
-                    pause();
+                    print_error_invalidData("las horas");
                     break;
+                }
 
-                    salaryOK = controller_askfor_salary(&auxSalary);
-                    if (salaryOK==0)
+                salaryOK = controller_askfor_salary(bufferEmployee);
+                if (salaryOK==0)
+                {
+                    print_error_invalidData("el salario");
+                    break;
+                }
+                if (idValid&&nameOK&&hoursOK&&salaryOK)
+                {
+                    Employee* employeeNew = employee_newParametrosBinarios(bufferEmployee);
+                    if (employeeNew!=NULL)
                     {
-                        clearScreen();
-                        printf("Hubo un error al ingresar el salario. Datos invalidos ingresados.\nIntente mas tarde.\n");
-                        pause();
-                        break;
-                    }
-                    if (idOK&&nameOK&&hoursOK&&salaryOK)
-                    {
-                        Employee* employeeNew = employee_newParametrosInt(auxID,auxName,auxHours,auxSalary);
-                        if (employeeNew!=NULL)
-                        {
-                            ll_add(pArrayListEmployee,employeeNew);
-                            retVal = 1;
-                            free(auxName);
-                            printf("\n\nDatos cargados exitosamente.\n");
-                            pause();
-                        }
+                        ll_add(pArrayListEmployee,employeeNew);
+                        retVal = 1;
+                        print_loaded();
                     }
                 }
             }
+        }
 
 
         }
-    }
+
     return retVal;
 }
 
@@ -180,7 +170,7 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
         while (option!=3)
         {
             clearScreen();
-            print_employee_AddMenu();
+            print_employee_modificationMenu();
             fflush(stdin);
             getOption(&option);
             switch (option)
@@ -204,6 +194,8 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
                 controller_ListEmployee(pArrayListEmployee);
                 newLine();
                 pause();
+                break;
+            case 3:
                 break;
             default:
                 print_invalidOption();
@@ -328,7 +320,37 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_sortEmployee(LinkedList* pArrayListEmployee)
 {
-    return 1;
+    int retVal = -1;
+    if (pArrayListEmployee!=NULL)
+    {
+        int option = 0 , order = 0;
+        while (option!=5)
+        {
+            clearScreen();
+            print_sort_menu();
+            fflush(stdin);
+            getOption(&option);
+            switch (option)
+            {
+            case 1:
+                getOrder(&order);
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            default:
+                print_invalidOption();
+                break;
+            }
+        }
+
+    }
+    return retVal;
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo texto).
@@ -382,54 +404,38 @@ int controller_saveAsBinary(char* path, LinkedList* pArrayListEmployee)
 
 /** \brief pide nombre y lo verifica
  *
- * \param retName char* -  el nombre ingresado
+ * \param ptrEmployee Employee* -  puntero a empleado
  * \return int - 1 si lo pudo verificar y cargar - 0 si no pudo
  *
  */
-int controller_askfor_name(char* retName)
+int controller_askfor_name(void* ptrEmployee)
 {
     int retVal = 0;
-    if (retName!=NULL)
+    ptrEmployee = (Employee*)ptrEmployee;
+    if (ptrEmployee!=NULL)
     {
-        char* auxStr = NULL;
-        auxStr = (char*)malloc((sizeof(char)) * 128);
-        if (auxStr!=NULL)
+        char bufferName[128];
+        int counter = 0;
+        printf("\nIngrese el nombre: ");
+        fflush(stdin);
+        //fgets(bufferName,127,stdin);
+        fscanf(stdin,"%[^\n]\0",bufferName);
+        //printf("datos %s - nueva linea?",bufferName);
+        while ( !(isName(bufferName,strlen(bufferName)))&&counter<5 )
         {
-            int isValid, counter = 0;
-            printf("\nIngrese nombre: ");
+            counter++;
+            printf("Error, datos invalidos. Ingrese nombre: ");
             fflush(stdin);
-            fgets(auxStr,127,stdin);
-            isValid = isName(auxStr,strlen(auxStr));
-            while (isValid==0 && counter<5)
-            {
-                printf("\nHubo un error, vuelva a intentar. Ingrese nombre: ");
-                fflush(stdin);
-                fgets(auxStr,127,stdin);
-                isValid = isName(auxStr,strlen(auxStr));
-                counter++;
-            }
-            if (isValid==1)
-            {
-               // if ( (sizeof(retName)) >= ( (strlen(auxStr)) * (sizeof(char)) ) )
-               // {
-                    strcpy(retName,auxStr);
-                    retVal = 1;
-               // }
-                //else
-               // {
-                //    char* auxPtr;
-                 //   auxPtr = (char*)realloc(retName, ( (sizeof(char)) * ((strlen(auxStr))+2) ) );
-                 //   if (auxPtr!=NULL && auxPtr!=retName)
-                 //   {
-                   //     retName = auxPtr;
-                   //     strcpy(retName,auxStr);
-                   //     retVal = 1;
-                  //  }
-                //}
-
-            }
+            fscanf(stdin,"%[^\n]\0",bufferName);
+            //fgets(bufferName,127,stdin);
+            //printf("datos %s - nueva linea?",bufferName);
         }
-        free(auxStr);
+
+
+        if (isName(bufferName,strlen(bufferName)))
+        {
+            retVal = employee_setNombre(ptrEmployee,bufferName);
+        }
     }
     return retVal;
 }
@@ -439,12 +445,19 @@ int controller_askfor_name(char* retName)
  * \return int - 1 si lo pudo cargar - 0 si no pudo
  *
  */
-int controller_askfor_hours(int* retHours)
+int controller_askfor_hours(void* ptrEmployee)
 {
     int retVal = 0;
-    if (retHours!=NULL)
+    ptrEmployee = (Employee*)ptrEmployee;
+    if (ptrEmployee!=NULL)
     {
-        retVal = controller_askfor_unsignedInt("Ingrese horas: ",retHours);
+        int auxHours;
+        auxHours = controller_askfor_unsignedInt("Ingrese horas: ");
+        if (auxHours>0)
+        {
+            employee_setHorasTrabajadas(ptrEmployee,auxHours);
+            retVal = 1;
+        }
     }
     return retVal;
 }
@@ -454,12 +467,19 @@ int controller_askfor_hours(int* retHours)
  * \return int - 1 si lo pudo cargar - 0 si no pudo
  *
  */
-int controller_askfor_salary(int* retSalary)
+int controller_askfor_salary(void* ptrEmployee)
 {
     int retVal = 0;
-    if (retSalary!=NULL)
+    ptrEmployee = (Employee*)ptrEmployee;
+    if (ptrEmployee!=NULL)
     {
-        retVal = controller_askfor_unsignedInt("Ingrese salario: ",retSalary);
+        int auxSalary;
+        auxSalary = controller_askfor_unsignedInt("Ingrese Salario: ");
+        if (auxSalary>0)
+        {
+            employee_setSueldo(ptrEmployee,auxSalary);
+            retVal = 1;
+        }
     }
     return retVal;
 }
@@ -469,12 +489,19 @@ int controller_askfor_salary(int* retSalary)
  * \return int - 1 si lo pudo cargar - 0 si no pudo
  *
  */
-int controller_askfor_ID(int* retID)
+int controller_askfor_ID(void* ptrEmployee)
 {
     int retVal = 0;
-    if (retID!=NULL)
+    ptrEmployee = (Employee*)ptrEmployee;
+    if (ptrEmployee!=NULL)
     {
-        retVal = controller_askfor_unsignedInt("Ingrese ID: ",retID);
+        int auxID;
+        auxID = controller_askfor_unsignedInt("Ingrese ID: ");
+        if (auxID>0)
+        {
+            employee_setId(ptrEmployee,auxID);
+            retVal = 1;
+        }
     }
     return retVal;
 }
@@ -485,10 +512,10 @@ int controller_askfor_ID(int* retID)
  * \return int - 1 si lo pudo cargar - 0 si no pudo
  *
  */
-int controller_askfor_unsignedInt(char* message, int* retInt)
+int controller_askfor_unsignedInt(char* message)
 {
-    int retVal = 0;
-    if (message!=NULL&&retInt!=NULL)
+    int retVal = -1;
+    if (message!=NULL)
     {
         int auxInt = -1, counter = 0;
         printf("\n%s",message);
@@ -503,8 +530,7 @@ int controller_askfor_unsignedInt(char* message, int* retInt)
         }
         if (auxInt>0)
         {
-            *retInt = auxInt;
-            retVal = 1;
+            retVal = auxInt;
         }
     }
     return retVal;
@@ -573,8 +599,60 @@ int controller_getEmployee (LinkedList* pArrayListEmployee)
     }
     return retVal;
 }
-//int itsReady (void* pArrayListEmployee)
+int controller_switch(LinkedList* pArrayListEmployee, int indexOne, int indexTwo)
+{
+    int retVal = 0;
+    if (pArrayListEmployee!=NULL&&indexOne>0&&indexTwo>0)
+    {
+        Employee* auxPtrOne , auxPtrTwo;
+        auxPtrOne =(Employee*) ll_get(pArrayListEmployee,indexOne);
+        auxPtrTwo =(Employee*) ll_get(pArrayListEmployee,indexTwo);
+        ll_set(pArrayListEmployee,indexOne,auxPtrTwo);
+        ll_set(pArrayListEmployee,indexTwo,auxPtrOne);
+    }
+    return retVal;
+}
+int getOrder(int* retOrder)
+{
+    int retVal = 0;
+    if (retOrder!=NULL)
+    {
+        int option = 0;
+        while (option!=3&&option!=1&&option!=2)
+        {
+            clearScreen();
+            print_order_menu();
+            getOption(&option);
+            switch (option)
+            {
+            case 1:
+                *retOrder = 1;
+                retVal = 1;
+                break;
+            case 2:
+                *retOrder = -1;
+                retVal = 1;
+                break;
+            case 3:
+                break;
+            default:
+                print_invalidOption();
+                pause();
+                break;
+            }
+        }
+    }
+    return retVal;
+}
+int controller_sortByParam (LinkedList* pArrayListEmployee,int (*pFunc)(void* ,void*), int order)
+{
+    int retVal = 0;
+    if (pArrayListEmployee!=NULL&&pFunc!=NULL)
+    {
 
+    }
+    return retVal;
+}
 
 
 

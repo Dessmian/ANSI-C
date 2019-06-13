@@ -37,7 +37,10 @@ int employee_getEmployeeByID(void* pArrayListEmployee, int IDentification);
 int employee_getEmployeeByName(void* pArrayListEmployee, char* name);
 int employee_getNewID (void* pArraylistEmployee);
 
-
+int employee_sortByID(Employee* ptrEmp1 ,Employee* ptrEmpTwo);
+int employee_sortByName(Employee* ptrEmp1 ,Employee* ptrEmpTwo);
+int employee_sortByHours(Employee* ptrEmp1 ,Employee* ptrEmpTwo);
+int employee_sortBySalary(Employee* ptrEmp1 ,Employee* ptrEmpTwo);
 
 
 #endif // employee_H_INCLUDED

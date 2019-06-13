@@ -30,10 +30,10 @@ void print_employee_deleteMenu(void)
 void print_confirm(char* string)
 {
     printf("Esta seguo que desea %s?\n",string);
-    printf("1.Si");
-    printf("2.No");
+    printf("\n1.Si");
+    printf("\n2.No");
 }
-void print_employee_AddMenu(void)
+void print_employee_empModifyMenu(void)
 {
     printf("1. Modificar ID.\n");
     printf("2. Modificar Nombre.\n");
@@ -77,3 +77,31 @@ void print_loaded(void)
     newLine();
     pause();
 }
+void print_sort_menu(void)
+{
+    clearScreen();
+    printf("MENU ORDENAMIENTO\n");
+    printf("\n1. Ordenar por ID.");
+    printf("\n2. Ordenar por nombre.");
+    printf("\n3. Ordenar por horas trabajadas.");
+    printf("\n4. Ordenar por salario.");
+    printf("\n5. Salir.");
+}
+void print_order_menu(void)
+{
+    printf("\n1. Mayor a menor.");
+    printf("\n2. Menor a mayor.");
+    printf("\n3. Salir.");
+    newLine();
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -243,6 +243,7 @@ int employee_modify (Employee* ptrEmployee,void* pArrayListEmployee)
             int option = 0;
             while (option!=6)
             {
+                clearScreen();
                 printf("Datos Originales:\n");
                 printEmpHeader();
                 printOneEmployee(ptrEmployee);
@@ -250,20 +251,21 @@ int employee_modify (Employee* ptrEmployee,void* pArrayListEmployee)
                 printEmpHeader();
                 printOneEmployee(bufferEmployee);
                 newLine();
-                print_employee_modificationMenu();
+                print_employee_empModifyMenu();
+                getOption(&option);
                 switch (option)
                 {
                 case 1:
-                    controller_askfor_ID(&(bufferEmployee->id));
+                    controller_askfor_ID(bufferEmployee);
                     break;
                 case 2:
-                    controller_askfor_name(bufferEmployee->nombre);
+                    controller_askfor_name(bufferEmployee);
                     break;
                 case 3:
-                    controller_askfor_hours(&(bufferEmployee->horasTrabajadas));
+                    controller_askfor_hours(bufferEmployee);
                     break;
                 case 4:
-                    controller_askfor_salary(&(bufferEmployee->sueldo));
+                    controller_askfor_salary(bufferEmployee);
                     break;
                 case 5:
                     if (employee_isValid(bufferEmployee)==1)
@@ -275,7 +277,7 @@ int employee_modify (Employee* ptrEmployee,void* pArrayListEmployee)
                             employee_setHorasTrabajadas(ptrEmployee,bufferEmployee->horasTrabajadas);
                             employee_setSueldo(ptrEmployee,bufferEmployee->sueldo);
                             printf("\n\nCambios guardados");
-                            system("pause");
+                            pause();
                         }
                         else
                         {
@@ -286,18 +288,21 @@ int employee_modify (Employee* ptrEmployee,void* pArrayListEmployee)
                                 employee_setHorasTrabajadas(ptrEmployee,bufferEmployee->horasTrabajadas);
                                 employee_setSueldo(ptrEmployee,bufferEmployee->sueldo);
                                 printf("\n\nCambios guardados");
-                                system("pause");
+                                newLine();
+                                pause();
                             }
                             else
                             {
-                                printf("\n\nError. ID ya esta en uso");
+                                printf("\n\nError. ID ya esta en uso\n");
+                                pause();
                             }
                         }
                     }
                     else
                     {
                         printf("\n\nError. No se pueden guardar datos invalidos");
-                        system("pause");
+                        newLine();
+                        pause();
                     }
                     break;
                 default:
@@ -448,7 +453,84 @@ int employee_getNewID (void* pArraylistEmployee)
     }
     return retID;
 }
-
+int employee_sortByID(Employee* ptrEmp1 ,Employee* ptrEmpTwo)
+{
+    int retVal = 0;
+    if (ptrEmp1!=NULL&&ptrEmpTwo!=NULL)
+    {
+        int auxInt1 , auxIntTwo;
+        employee_getId(ptrEmp1,&auxInt1);
+        employee_getId(ptrEmpTwo,&auxIntTwo);
+        if (auxInt1>auxIntTwo)
+        {
+            retVal = 1;
+        }
+        else if (auxInt1<auxIntTwo)
+        {
+            retVal = -1;
+        }
+    }
+    return retVal;
+}
+int employee_sortByName(Employee* ptrEmp1 ,Employee* ptrEmpTwo)
+{
+    int retVal = 0;
+    if (ptrEmp1!=NULL&&ptrEmpTwo!=NULL)
+    {
+        char auxName1 [128] , auxNameTwo [128];
+        int compared;
+        employee_getNombre(ptrEmp1, auxName1);
+        employee_getNombre(ptrEmpTwo, auxNameTwo);
+        compared = stricmp(auxName1,auxNameTwo);
+        if (compared>0)
+        {
+            retVal = 1;
+        }
+        else if (compared<0)
+        {
+            retVal = -1;
+        }
+    }
+    return retVal;
+}
+int employee_sortByHours(Employee* ptrEmp1 ,Employee* ptrEmpTwo)
+{
+    int retVal = 0;
+    if (ptrEmp1!=NULL&&ptrEmpTwo!=NULL)
+    {
+        int auxInt1 , auxIntTwo;
+        employee_getHorasTrabajadas(ptrEmp1,&auxInt1);
+        employee_getHorasTrabajadas(ptrEmpTwo,&auxIntTwo);
+        if (auxInt1>auxIntTwo)
+        {
+            retVal = 1;
+        }
+        else if (auxInt1<auxIntTwo)
+        {
+            retVal = -1;
+        }
+    }
+    return retVal;
+}
+int employee_sortBySalary(Employee* ptrEmp1 ,Employee* ptrEmpTwo)
+{
+    int retVal = 0;
+    if (ptrEmp1!=NULL&&ptrEmpTwo!=NULL)
+    {
+        int auxInt1 , auxIntTwo;
+        employee_getSueldo(ptrEmp1,&auxInt1);
+        employee_getSueldo(ptrEmpTwo,&auxIntTwo);
+        if (auxInt1>auxIntTwo)
+        {
+            retVal = 1;
+        }
+        else if (auxInt1<auxIntTwo)
+        {
+            retVal = -1;
+        }
+    }
+    return retVal;
+}
 
 
 
